@@ -15,3 +15,12 @@ Ruby
 - def is_georgian? - returns true if string is georgian characters
 - def is_latin? - returns true if string is latin characters
 - def georgian_morph(type = 'basic') - does some morphing on georgian word patterns, but needs development to be of use for anyone
+
+
+Python/Django
+=============
+- glt.py - toolkit to deal with Georgian language
+ * CHARMAP_GEO2LAT - mapping of Georgian characters to Latin characters
+ *  CHARMAP_UNI2LAT - mapping of various unicode characters to Latin characters
+ * def to_georgian - convert a Latin string into the Georgian equivalent
+ *  def slughifi - replacement for Django's slugify which cannot deal nicely with unicode chars.
