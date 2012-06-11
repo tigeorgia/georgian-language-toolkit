@@ -1,28 +1,26 @@
 # -*- coding: utf-8 -*
 """
-Georgian Language Toolkit - GLT
-for Django
-
-slughifi originally from:
-http://trac.django-fr.org/browser/site/trunk/project/links/slughifi.py?rev=47
+Georgia Language Toolkit (for shenmartav)
 """
 __docformat__ = 'epytext en'
 
 import re
 from types import UnicodeType
-from django.template.defaultfilters import slugify
 
 
 #: character map of georgian to latin
 CHARMAP_GEO2LAT = {
     u'ა': 'a', u'ბ': 'b', u'გ': 'g', u'დ': 'd', u'ე': 'e',
     u'ვ': 'v', u'ზ': 'z', u'თ': 't', u'ი': 'i', u'კ': 'k',
-    u'ლ': 'l', u'მ': 'm', u'ნ': 'n', u'ო': 'o', u'პ': 'p',
-    u'ჟ': 'zh', u'რ': 'r', u'ს': 's', u'ტ': 't', u'უ': 'u',
-    u'ფ': 'p', u'ქ': 'k', u'ღ': 'gh', u'ყ': 'q', u'შ': 'sh',
+    u'ქ': 'k\'', u'ლ': 'l', u'მ': 'm', u'ნ': 'n', u'ო': 'o',
+    u'პ': 'p', u'ჟ': 'zh', u'რ': 'r', u'ს': 's', u'ტ': 't',
+    u'უ': 'u', u'ფ': 'p', u'ღ': 'gh', u'ყ': 'q', u'შ': 'sh',
     u'ჩ': 'ch', u'ც': 'ts', u'ძ': 'dz', u'წ': 'ts',
     u'ჭ': 'ch', u'ხ': 'kh', u'ჯ': 'j', u'ჰ': 'h', u'ფ': 'f',
 }
+
+#: character map of latin to georgian
+CHARMAP_LAT2GEO = dict(zip(CHARMAP_GEO2LAT.values(), CHARMAP_GEO2LAT.keys()))
 
 
 #: character map of many unicode to latin
@@ -121,58 +119,89 @@ CHARMAP_UNI2LAT = {
 
 
 
-def to_georgian (item):
-    """Convert the given item from latin into georgian chars.
+###########################################################
+# to/from georgian latin
+###########################################################
 
-    @param item: item to convert
+def to_georgian (name):
+    """Convert the given name from latin into georgian chars.
+
+    @param item: name to convert
     @type item: str
-    @return: converted item
+    @return: converted name
     @rtype: str
     """
-    keys = CHARMAP_GEO2LAT.keys()
-    values = CHARMAP_GEO2LAT.values()
-
     converted = []
-    item = item.lower()
+    geo_chars = CHARMAP_GEO2LAT.keys()
+    name = name.lower()
     i = 0
-    while i < len(item):
-        char = item[i]
+    while i < len(name):
+        char = name[i]
         i += 1
 
         try:
-            if item[i-1] == 'c' and item[i] == 'h':
+            if name[i-1] == 'c' and name[i] == 'h':
                 char = 'ch'
                 i += 1
-            elif item[i-1] == 's' and item[i] == 'h':
+            elif name[i-1] == 's' and name[i] == 'h':
                 char = 'sh'
                 i += 1
-            elif item[i-1] == 't' and item[i] == 's':
+            elif name[i-1] == 't' and name[i] == 's':
                 char = 'ts'
                 i += 1
-            elif item[i-1] == 'd' and item[i] == 'z':
+            elif name[i-1] == 'd' and name[i] == 'z':
                 char = 'dz'
                 i += 1
-            elif item[i-1] == 'k' and item[i] == 'h':
+            elif name[i-1] == 'k' and name[i] == 'h':
                 char = 'kh'
                 i += 1
-            elif item[i-1] == 'g' and item[i] == 'h':
+            elif name[i-1] == 'g' and name[i] == 'h':
                 char = 'gh'
                 i += 1
-            elif item[i-1] == 'z' and item[i] == 'h':
+            elif name[i-1] == 'z' and name[i] == 'h':
                 char = 'zh'
                 i += 1
         except IndexError:
             pass
 
         try:
-            index = values.index(char)
-            converted.append(keys[index])
-        except ValueError:
-            converted.append(' ')
+            converted.append(CHARMAP_LAT2GEO[char])
+        except KeyError:
+            if char in geo_chars:
+                converted.append(char)
+            else:
+                converted.append(' ')
 
     return ''.join(converted)
 
 
+def to_latin (name):
+    """Convert the given name from georgian into latin chars.
+
+    @param name: name to convert
+    @type item: str
+    @return: converted name
+    @rtype: str
+    """
+    converted = []
+    latin_chars = CHARMAP_GEO2LAT.values()
+    for char in name.lower():
+        try:
+            converted.append(CHARMAP_GEO2LAT[char])
+        except KeyError:
+            if char in latin_chars:
+                converted.append(char)
+            else:
+                converted.append(' ')
+
+    return ''.join(converted)
+
+
+
+###########################################################
+# slughifi depends on Django, originally from:
+# http://trac.django-fr.org/browser/site/trunk/project/links/slughifi.py?rev=47
+###########################################################
 
 def _replace_char(m):
     char = m.group()
@@ -180,7 +209,6 @@ def _replace_char(m):
         return CHARMAP_UNI2LAT[char]
     else:
         return char
-
 
 
 def slughifi(value, do_slugify=True):
@@ -199,6 +227,8 @@ def slughifi(value, do_slugify=True):
     >>> slugify(text)
     'cest-dj-lt'
     """
+    from django.template.defaultfilters import slugify
+
     # unicodification
     if type(value) != UnicodeType:
         value = unicode(value, 'utf-8', 'ignore')
@@ -211,3 +241,77 @@ def slughifi(value, do_slugify=True):
       value = slugify(value)
 
     return value.encode('ascii', 'ignore')
+
+
+
+###########################################################
+# swap names
+###########################################################
+
+KEEP_AS_IS = [
+    u'გიორგი', u'ირაკლი', u'ანი', u'დიმიტრი', u'გერონტი', u'ლილი', u'გივი',
+    u'გოდერძი', u'ნუკრი', u'სესილი', u'ლალი', u'ციური', u'ლიზი', u'ბადრი',
+    u'ჯონდი',
+]
+
+
+def lastname_first (name):
+    """Make lastname the first item in given name, assuming current first
+    item is a first name which then becomes the last item.
+
+    Takes Georgian first name rules into account.
+
+    @param name: name in the format <first middle last>
+    @type name: str
+    @return: name in the format <last middle first>
+    @rtype: str
+    """
+    try:
+        parts = name.decode('utf-8').strip().split(' ')
+    except UnicodeEncodeError:
+        parts = name.strip().split(' ')
+    if len(parts) < 2:
+        return name
+
+    last = parts.pop().strip()
+    first = parts.pop(0).strip()
+    if first not in KEEP_AS_IS:
+        first += u'ი'
+
+    if len(parts) > 0:
+        return '%s %s %s' % (last, ' '.join(parts), first)
+    else:
+        return '%s %s' % (last, first)
+
+
+def firstname_first (name):
+    """Make firstname the first item in given name, assuming current first
+    item is a last name which then becomes the last item.
+
+    Takes Georgian first name rules into account.
+
+    @param name: name in the format <last middle first>
+    @type name: str
+    @return: name in the format <first middle last>
+    @rtype: str
+    """
+    try:
+        parts = name.decode('utf-8').strip().split(' ')
+    except UnicodeEncodeError:
+        parts = name.strip().split(' ')
+    if len(parts) < 2:
+        return name
+
+    last = parts.pop(0).strip()
+    first = parts.pop().strip()
+    if first not in KEEP_AS_IS:
+        try:
+            if first[-1] == u'ი': first = first[:-1]
+        except IndexError:
+            pass
+
+    if len(parts) > 0:
+        return '%s %s %s' % (first, ' '.join(parts), last)
+    else:
+        return '%s %s' % (first, last)
+
