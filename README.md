@@ -28,3 +28,6 @@ Python/Django
  *  def slughifi - replacement for Django's slugify which cannot deal nicely with unicode chars.
  * def lastname_first - converts given name so the lastname comes first (correct georgian declination)
  * def firstname_first - converts given name so the firstname comes first (correct georgian declination)
+- pid.py - locate Georgian personal ID numbers
+ * def validate_personal_id - Checks a string for basic conformity to Georgia's personal ID number format
+ * def extract_ids - Goes through a text file word-by-word looking for strings that validate as IDs.
