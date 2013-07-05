@@ -12,15 +12,16 @@ from types import UnicodeType
 CHARMAP_GEO2LAT = {
     u'ა': 'a', u'ბ': 'b', u'გ': 'g', u'დ': 'd', u'ე': 'e',
     u'ვ': 'v', u'ზ': 'z', u'თ': 't', u'ი': 'i', u'კ': 'k',
-    u'ქ': 'k\'', u'ლ': 'l', u'მ': 'm', u'ნ': 'n', u'ო': 'o',
+    u'ქ': 'k', u'ლ': 'l', u'მ': 'm', u'ნ': 'n', u'ო': 'o',
     u'პ': 'p', u'ჟ': 'zh', u'რ': 'r', u'ს': 's', u'ტ': 't',
-    u'უ': 'u', u'ფ': 'p', u'ღ': 'gh', u'ყ': 'q', u'შ': 'sh',
+    u'უ': 'u', u'ფ': 'f', u'ღ': 'gh', u'ყ': 'q', u'შ': 'sh',
     u'ჩ': 'ch', u'ც': 'ts', u'ძ': 'dz', u'წ': 'ts',
-    u'ჭ': 'ch', u'ხ': 'kh', u'ჯ': 'j', u'ჰ': 'h', u'ფ': 'f',
+    u'ჭ': 'ch', u'ხ': 'kh', u'ჯ': 'j', u'ჰ': 'h',
 }
 
 #: character map of latin to georgian
 CHARMAP_LAT2GEO = dict(zip(CHARMAP_GEO2LAT.values(), CHARMAP_GEO2LAT.keys()))
+
 
 
 #: character map of many unicode to latin
