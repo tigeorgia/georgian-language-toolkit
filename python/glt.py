@@ -22,6 +22,21 @@ CHARMAP_GEO2LAT = {
 #: character map of latin to georgian
 CHARMAP_LAT2GEO = dict(zip(CHARMAP_GEO2LAT.values(), CHARMAP_GEO2LAT.keys()))
 
+MONTHS_EN2KA = {
+    u"January":u"იანვარი",
+    u"February":u"თებერვალი",
+    u"March":u"მარტი",
+    u"April":u"აპრილი",
+    u"May":u"მაისი",
+    u"June":u"ივნისი",
+    u"July":u"ივლისი",
+    u"August":u"აგვისტო",
+    u"September":u"სექტემბერი",
+    u"October":u"ოქტომბერი",
+    u"November":u"ნოემბერი",
+    u"December":u"დეკემბერი",
+}
+MONTHS_KA2EN = dict(zip(MONTHS_EN2KA.values(), MONTHS_EN2KA.keys()))
 
 
 #: character map of many unicode to latin
@@ -197,6 +212,16 @@ def to_latin (name):
 
     return ''.join(converted)
 
+def month_ka2en(string):
+    """ Replace any Georgian month name string with the English
+    equivalent."""
+    if string is None:
+        return ""
+
+    for month in MONTHS_KA2EN.keys():
+        string = string.replace(month,MONTHS_KA2EN[month])
+
+    return string
 
 
 ###########################################################
