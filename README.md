@@ -25,6 +25,7 @@ Python/Django
  *  CHARMAP_UNI2LAT - mapping of various unicode characters to Latin characters
  * def to_georgian - convert a Latin string into the Georgian equivalent
  * def to_latin - convert a Georgian string to the Latin equivalent
+ * def month_ka2en - convert a Georgian month name string to the English equivalent
  *  def slughifi - replacement for Django's slugify which cannot deal nicely with unicode chars.
  * def lastname_first - converts given name so the lastname comes first (correct georgian declination)
  * def firstname_first - converts given name so the firstname comes first (correct georgian declination)
